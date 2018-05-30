@@ -45,21 +45,20 @@ def find(bound_set):
     new_bound_set = bound_set
     max_r = 0
     for selected_3_bound in list(combinations(bound_set, 3)):
-        new_bound = Bound(solve(selected_3_bound)[0], solve(
-            selected_3_bound)[1], solve(selected_3_bound)[2])
-        # set_trace()
-        if new_bound.fit_all(new_bound_set) and new_bound.r > max_r:
-            max_r = new_bound.r
-            max_bound = new_bound
+        a = []
+        for i in range (4):
+            a.append(solve(selected_3_bound,i))
+            new_bound = Bound(a[i][0],a[i][1],a[i][2])
+            if new_bound.fit_all(new_bound_set) and new_bound.r > max_r:
+                max_r = new_bound.r
+                max_bound = new_bound
     new_bound_set.append(max_bound)
     bd = [max_bound.x, max_bound.y, max_bound.r]
     circles.append(bd)
     return max_bound
-
-
-def solve(three_bounds):
-    def fi(solution, bound):
-        if bound.x == INFT:
+def solve(three_bounds ,i):
+    def fi(solution,bound):
+        if bound.x == INFT :
             return solution[0] + solution[2] - 1.0
         elif bound.x == - INFT:
             return solution[0] - solution[2] + 1.0
@@ -70,22 +69,25 @@ def solve(three_bounds):
         else:
             return -(solution[2] + bound.r)**2 + (solution[0] - bound.x)**2 + (solution[1] - bound.y)**2
         # return -(solution[2] + bound.r)**2 + (solution[0] - bound.x)**2 + (solution[1] - bound.y)**2
-
-    def f(x): return [
-        fi(x, three_bounds[0]),
-        fi(x, three_bounds[1]),
-        fi(x, three_bounds[2])
-    ]
-    return fsolve(f, [1.0, 1.0, 0.0])
+    f = lambda x :[
+            fi(x,three_bounds[0]),
+            fi(x,three_bounds[1]),
+            fi(x,three_bounds[2])
+        ]
+    if(i == 0):
+        return fsolve(f, [1.0, 1.0, 0.0])
+    if(i == 1):
+        return fsolve(f, [-1.0, -1.0, 0.0])
+    if (i == 2):
+        return fsolve(f, [-1.0, 1.0, 0.0])
+    if (i == 3):
+        return fsolve(f, [1.0, -1.0, 0.0])
 # test:
-
-
-
-# 
-def ball_in_box(m, blockers):
+def ball_in_box(m, blockers): 
     for x in blockers:
-        # b = Bound(x[0], x[1], 0)   #append blocker with x , y , radius
-        b = Bound(*x, 0)   #append blocker with x , y , radius
+        tmp = list(x)
+        tmp.append(0)
+        b = Bound(tmp[0],tmp[1],tmp[2])
         bound_set0.append(b)
     for j in range(m):
         find(bound_set0) 
