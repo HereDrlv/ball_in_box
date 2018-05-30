@@ -80,12 +80,13 @@ def solve(three_bounds):
 # test:
 
 
+
+# 
 def ball_in_box(m, blockers):
     for x in blockers:
-        tmp = list(x)
-        tmp.append(0)
-        b = Bound(tmp[0], tmp[1], tmp[2])
+        # b = Bound(x[0], x[1], 0)   #append blocker with x , y , radius
+        b = Bound(*x, 0)   #append blocker with x , y , radius
         bound_set0.append(b)
     for j in range(m):
-        find(bound_set0)
+        find(bound_set0) 
     return circles
