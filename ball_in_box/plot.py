@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-  
 from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
+
+
 def answer(circles,blockers):    
     fig = plt.figure(figsize=(6,6))
     ax = fig.add_subplot(111)
